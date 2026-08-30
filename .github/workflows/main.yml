@@ -37,10 +37,12 @@ jobs:
       run: |
         if [ -f gradlew ]; then
           ./gradlew assembleDebug --no-daemon
+        else
+          gradle assembleDebug --no-daemon
         fi
 
-    - name: Upload APK Artifact
+    - name: Find and Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: muzammils-browser-apk
-        path: "**/build/outputs/apk/debug/*.apk"
+        path: "**/build/**/*.apk"

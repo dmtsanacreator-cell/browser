@@ -1,0 +1,44 @@
+name: Build Muzammil Browser APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: |
+        if [ -f gradlew ]; then
+          chmod +x gradlew
+        else
+          echo "gradlew not found, looking in wrapper..."
+          chmod +x gradle/wrapper/gradle-wrapper.properties || true
+        fi
+      continue-on-error: true
+
+    - name: Build with Gradle
+      run: |
+        if [ -f gradlew ]; then
+          ./gradlew assembleDebug
+        else
+          gradle assembleDebug
+        fi
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: muzammils-browser-apk
+        path: "**/build/outputs/apk/debug/*.apk"

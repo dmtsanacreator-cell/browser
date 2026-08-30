@@ -19,13 +19,6 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Fix Repository Mode Conflict
-      run: |
-        if [ -f settings.gradle ]; then
-          sed -i 's/FAIL_ON_PROJECT_REPOS/PREFER_PROJECT/g' settings.gradle
-          sed -i 's/repositoriesMode.set/echo/g' settings.gradle || true
-        fi
-
     - name: Grant execute permission for gradlew
       run: |
         if [ -f gradlew ]; then
